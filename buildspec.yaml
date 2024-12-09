@@ -1,15 +1,30 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      docker: 20   # Ensure the correct Docker version if available in the environment
+      aws-cli: 2  # Specify AWS CLI version
+
+    commands:
+      - echo Installing necessary tools...
+      - aws --version
+      - docker --version
+
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 008971637333.dkr.ecr.ca-central-1.amazonaws.com
+
   build:
     commands:
       - echo Building the Docker image...
       - docker build -t assignment3 .
-      - echo Tagging the Docker image...
       - docker tag assignment3:latest 008971637333.dkr.ecr.ca-central-1.amazonaws.com/assignment3:latest
-      - echo Pushing the Docker image...
+
+  post_build:
+    commands:
+      - echo Pushing the Docker image to ECR...
       - docker push 008971637333.dkr.ecr.ca-central-1.amazonaws.com/assignment3:latest
+      - echo Deploying ECS Task...
+      - aws ecs update-service --cluster saiyed-cluster --service saiyed-service --force-new-deployment
