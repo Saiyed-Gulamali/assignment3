@@ -19,7 +19,7 @@ phases:
       - echo "Pushing the Docker image to ECR..."
       - docker push 008971637333.dkr.ecr.ca-central-1.amazonaws.com/assignment3:latest
       - echo "Creating imagedefinitions.json..."
-      - printf '[{"name":"shashank-app-container","imageUri":"008971637333.dkr.ecr.ca-central-1.amazonaws.com/assignment3:latest"}]' > imagedefinitions.json
+      - printf '[{"name":"assignment3","imageUri":"008971637333.dkr.ecr.ca-central-1.amazonaws.com/assignment3:latest"}]' > imagedefinitions.json
       - echo "imagedefinitions.json created successfully."
       - echo "Build completed on $(date)"
       
